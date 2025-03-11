@@ -19,6 +19,7 @@ const CreateStorage = () => {
     name: "",
     description: "",
     location: "",
+    image: "",
   });
 
   const toast = useToast();

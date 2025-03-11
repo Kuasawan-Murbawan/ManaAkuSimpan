@@ -48,7 +48,7 @@ export const updateStorage = async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ success: false, message: "ID not found" });
+    return res.status(404).json({ success: false, message: "Invalid ID" });
   }
 
   try {
@@ -80,7 +80,7 @@ export const deleteStorage = async (req, res) => {
   const { id } = req.params; // we can get the variables thru the url
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ success: false, message: "ID not found" });
+    return res.status(404).json({ success: false, message: "Invalid ID" });
   }
   try {
     // check if id exist
