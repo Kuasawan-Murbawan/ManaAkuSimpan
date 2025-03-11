@@ -8,15 +8,16 @@
 # Storage
 
 - [x] create, edit, delete storage
-- [x] give description, location of the storage
+- [x] give name, description, location of the storage
 - [ ] assign image to the storage
 
 # Item
 
 - [ ] create, edit, delete item
-- [ ] give description
-- [ ] assign keywords (BM/BI)
+- [ ] ~give description~
+- [ ] assign name, keywords (BM/BI)
 - [ ] assign image to the item
+- [ ] user can move item from one storage to another
 
 # Search
 

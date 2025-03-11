@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import storageRoutes from "./routes/storage.routes.js";
+import itemRoutes from "./routes/item.routes.js";
 
 dotenv.config();
 
@@ -16,6 +17,8 @@ app.get("/home", async (req, res) => {
 });
 
 app.use("/api/storage", storageRoutes);
+
+app.use("/api/item", itemRoutes);
 
 app.listen(PORT, () => {
   connectDB();

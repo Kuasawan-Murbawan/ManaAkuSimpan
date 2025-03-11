@@ -61,6 +61,7 @@ export const useStorageStore = create((set) => ({
       return { success: false, message: responseData.message };
 
     // update the UI immmediately using the returned data from response
+    // loop thru all storages, if the id matched, replace with the updated storage
     set((state) => ({
       storages: state.storages.map((storage) =>
         storage._id === sid ? responseData.data : storage
