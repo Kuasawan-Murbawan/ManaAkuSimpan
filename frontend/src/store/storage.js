@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 export const useStorageStore = create((set) => ({
-  storage: [],
+  storages: [],
   setStorage: (storage) => set({ storage }),
   createStorage: async (newStorage) => {
     if (!newStorage.name) {
@@ -22,7 +22,10 @@ export const useStorageStore = create((set) => ({
 
     return { success: true, message: "Storage created!" }; // success: responseData.success
   },
-  fetchStorages: async () => {
+  fetchStorage: async (storageId) => {
+    // TODO: implement this
+  },
+  fetchAllStorages: async () => {
     // default method is GET so no need to specify
     const res = await fetch("/api/storage");
     const responseData = await res.json();

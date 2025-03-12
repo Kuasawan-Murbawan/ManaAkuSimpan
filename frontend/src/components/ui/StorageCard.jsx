@@ -22,6 +22,7 @@ import { useStorageStore } from "../../store/storage";
 import { MdDelete } from "react-icons/md";
 import { MdModeEdit } from "react-icons/md";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const StorageCard = ({ storage }) => {
   const textColor = useColorModeValue("gray.600", "gray.200");
@@ -62,117 +63,133 @@ const StorageCard = ({ storage }) => {
   };
 
   return (
-    <Box
-      shadow="lg"
-      rounded={"lg"}
-      overflow={"hidden"}
-      transition={"all 0.3s"}
-      _hover={{ transform: "translateY(-10px)", shadow: "xl" }}
-      bg={bg}
-      p={5}
-    >
-      <HStack spacing={5}>
-        <Image
-          src={storage.image}
-          alt={storage.name}
-          h={48}
-          w={48}
-          objectFit={"cover"}
-        />
-        <VStack spacing={8} align={"start"}>
-          <Text fontSize={"2xl"} fontWeight={"bold"} textColor={textColor}>
-            {storage.name}
-          </Text>
-          <Text fontSize={"xl"} textColor={textColor}>
-            {storage.location}
-          </Text>
-          <Text textColor={textColor}>{storage.description} </Text>
-        </VStack>
+    <Link to={`/storage/${storage._id}`}>
+      <Box
+        shadow="lg"
+        rounded={"lg"}
+        overflow={"hidden"}
+        transition={"all 0.3s"}
+        _hover={{ transform: "translateY(-10px)", shadow: "xl" }}
+        bg={bg}
+        p={5}
+      >
+        <HStack spacing={5}>
+          <Image
+            src={storage.image}
+            alt={storage.name}
+            h={48}
+            w={48}
+            objectFit={"cover"}
+          />
+          <VStack spacing={8} align={"start"}>
+            <Text fontSize={"2xl"} fontWeight={"bold"} textColor={textColor}>
+              {storage.name}
+            </Text>
+            <Text fontSize={"xl"} textColor={textColor}>
+              {storage.location}
+            </Text>
+            <Text textColor={textColor}>{storage.description} </Text>
+          </VStack>
 
-        <HStack spacing={2}>
-          <Box
-            bg={"red"}
-            cursor={"pointer"}
-            borderRadius={"sm"}
-            w={30}
-            h={30}
-            display={"flex"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            onClick={() => handleDeleteStorage(storage._id)}
-          >
-            <MdDelete color="white" size={24} />
-          </Box>
-          <Box
-            bg={"grey"}
-            cursor={"pointer"}
-            borderRadius={"sm"}
-            w={30}
-            h={30}
-            display={"flex"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            onClick={onOpen}
-          >
-            <MdModeEdit color="white" size={24} />
-          </Box>
-        </HStack>
-      </HStack>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Edit Storage Details</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <VStack spacing={10} m={10}>
-              <Input
-                placeholder="Product Name"
-                name="name"
-                value={updatedStorage.name}
-                onChange={(e) =>
-                  setUpdatedStorage({ ...updatedStorage, name: e.target.value })
-                }
-              />
-              <Input
-                placeholder="Location"
-                name="location"
-                value={updatedStorage.location}
-                onChange={(e) =>
-                  setUpdatedStorage({
-                    ...updatedStorage,
-                    location: e.target.value,
-                  })
-                }
-              />
-              <Input
-                placeholder="Description"
-                name="description"
-                value={updatedStorage.description}
-                onChange={(e) =>
-                  setUpdatedStorage({
-                    ...updatedStorage,
-                    description: e.target.value,
-                  })
-                }
-              />
-            </VStack>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={4}
-              onClick={() => handleUpdateStorage(storage._id, updatedStorage)}
+          <HStack spacing={2}>
+            <Box
+              bg={"red"}
+              cursor={"pointer"}
+              borderRadius={"sm"}
+              w={30}
+              h={30}
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              onClick={() => handleDeleteStorage(storage._id)}
             >
-              Update
-            </Button>
-            <Button variant={"ghost"} onClick={onClose}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Box>
+              <MdDelete color="white" size={24} />
+            </Box>
+            <Box
+              bg={"grey"}
+              cursor={"pointer"}
+              borderRadius={"sm"}
+              w={30}
+              h={30}
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              onClick={onOpen}
+            >
+              <MdModeEdit color="white" size={24} />
+            </Box>
+          </HStack>
+        </HStack>
+
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Edit Storage Details</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <VStack spacing={10} m={10}>
+                <Input
+                  placeholder="Product Name"
+                  name="name"
+                  value={updatedStorage.name}
+                  onChange={(e) =>
+                    setUpdatedStorage({
+                      ...updatedStorage,
+                      name: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  placeholder="Location"
+                  name="location"
+                  value={updatedStorage.location}
+                  onChange={(e) =>
+                    setUpdatedStorage({
+                      ...updatedStorage,
+                      location: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  placeholder="Description"
+                  name="description"
+                  value={updatedStorage.description}
+                  onChange={(e) =>
+                    setUpdatedStorage({
+                      ...updatedStorage,
+                      description: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  placeholder="Image"
+                  name="image"
+                  value={updatedStorage.image}
+                  onChange={(e) =>
+                    setUpdatedStorage({
+                      ...updatedStorage,
+                      image: e.target.value,
+                    })
+                  }
+                />
+              </VStack>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                colorScheme="blue"
+                mr={4}
+                onClick={() => handleUpdateStorage(storage._id, updatedStorage)}
+              >
+                Update
+              </Button>
+              <Button variant={"ghost"} onClick={onClose}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Box>
+    </Link>
   );
 };
 
