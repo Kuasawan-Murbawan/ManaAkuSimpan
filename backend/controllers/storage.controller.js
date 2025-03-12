@@ -1,19 +1,9 @@
 import Storage from "../models/storage.model.js";
 import mongoose from "mongoose";
+import { catchingErrors, notFoundErr } from "./responseHandling.js";
 
-const catchingErrors = function (module, res, message) {
-  console.error(`Error occured during ${module}: `, message);
-  res.status(500).json({ success: false, message: `Error in ${module}` });
-};
-
-const notFoundErr = function (module, res) {
-  console.error(`Error occured during ${module}, cant find id`);
-  res
-    .status(404)
-    .json({ success: false, message: `ID not found during ${module}` });
-};
-
-export const getStorage = async (req, res) => {
+// 1. Get all Storage
+export const fetchAllStorages = async (req, res) => {
   try {
     const storages = await Storage.find({}); // if empty object, it will fetch all data
     res
@@ -24,6 +14,31 @@ export const getStorage = async (req, res) => {
   }
 };
 
+// 2. Get a specific Storage
+export const fetchStorage = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ success: false, message: "Invalid ID" });
+  }
+  try {
+    // check if id exist
+    const storage = await Storage.findById(id);
+    if (!storage) {
+      return notFoundErr("Fetch Storage", res);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Storage fetched!",
+      data: storage,
+    });
+  } catch (err) {
+    catchingErrors("Updating Storage", res, err);
+  }
+};
+
+// 3. Create Storage
 export const createStorage = async (req, res) => {
   const storage = req.body; // user input
 
@@ -43,6 +58,7 @@ export const createStorage = async (req, res) => {
   }
 };
 
+// 4. Update Storage
 export const updateStorage = async (req, res) => {
   const storage = req.body;
   const { id } = req.params;
@@ -74,25 +90,25 @@ export const updateStorage = async (req, res) => {
   }
 };
 
+// 5. Delete Storage
 export const deleteStorage = async (req, res) => {
   // the id is dynamic
 
   const { id } = req.params; // we can get the variables thru the url
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ success: false, message: "Invalid ID" });
+    return res.status(400).json({ success: false, message: "Invalid ID" });
   }
   try {
     // check if id exist
-
     const checkStorage = await Storage.findById(id);
     if (!checkStorage) {
-      return notFoundErr("Updating Storage", res);
+      return notFoundErr("Deleting Storage", res);
     }
 
     await Storage.findByIdAndDelete(id);
     res.status(200).json({ success: true, message: "Storage deleted" });
   } catch (err) {
-    catchingErrors("Deleting Storage", res, err);
+    return catchingErrors("Deleting Storage", res, err);
   }
 };

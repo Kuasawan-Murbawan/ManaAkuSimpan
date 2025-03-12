@@ -13,11 +13,11 @@
 
 # Item
 
-- [ ] create, edit, delete item
-- [ ] ~give description~
-- [ ] assign name, keywords (BM/BI)
+- [x] create, edit, delete item
+- [x] assign name, keywords (BM/BI)
 - [ ] assign image to the item
 - [ ] user can move item from one storage to another
+- [ ] user can clear all item from a storage
 
 # Search
 

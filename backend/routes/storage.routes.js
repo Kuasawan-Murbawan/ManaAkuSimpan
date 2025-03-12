@@ -1,6 +1,7 @@
 import express from "express";
 import {
-  getStorage,
+  fetchAllStorages,
+  fetchStorage,
   createStorage,
   updateStorage,
   deleteStorage,
@@ -9,7 +10,10 @@ import {
 const router = express.Router();
 
 // Show List of Storages
-router.get("/", getStorage);
+router.get("/", fetchAllStorages);
+
+// Show details of a storages
+router.get("/:id", fetchStorage);
 
 // Create Storage
 router.post("/", createStorage);
