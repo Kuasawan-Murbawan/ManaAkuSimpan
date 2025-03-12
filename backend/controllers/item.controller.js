@@ -65,7 +65,6 @@ export const createItem = async (req, res) => {
         .json({ success: false, message: "Storage ID not found" });
     }
 
-    console.log("id existed");
     // if exist, then save item
     const newItem = new Item(item);
     await newItem.save();

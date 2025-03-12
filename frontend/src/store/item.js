@@ -7,8 +7,6 @@ export const useItemStore = create((set) => ({
     const res = await fetch(`/api/item/${storageId}`);
     const responseData = await res.json();
 
-    console.log("from store: ", responseData.data);
-
     set({ items: responseData.data || [] });
   },
 }));

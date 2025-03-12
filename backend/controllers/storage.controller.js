@@ -34,7 +34,7 @@ export const fetchStorage = async (req, res) => {
       data: storage,
     });
   } catch (err) {
-    catchingErrors("Updating Storage", res, err);
+    catchingErrors("Fetching Storage", res, err);
   }
 };
 

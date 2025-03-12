@@ -5,11 +5,11 @@ import { useStorageStore } from "../store/storage";
 import StorageCard from "../components/ui/StorageCard";
 
 const Storage = () => {
-  const { fetchStorages, storages } = useStorageStore();
+  const { fetchAllStorages, storages } = useStorageStore();
 
   useEffect(() => {
-    fetchStorages();
-  }, [fetchStorages]);
+    fetchAllStorages();
+  }, [fetchAllStorages]);
 
   // console.log(storages);
 

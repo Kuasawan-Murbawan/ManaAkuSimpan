@@ -4,9 +4,9 @@ import {
   HStack,
   useColorMode,
   useColorModeValue,
+  Flex,
+  Text,
 } from "@chakra-ui/react";
-import { Flex } from "@chakra-ui/react";
-import { Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { Button } from "@chakra-ui/react";
 import { IoMdPerson } from "react-icons/io";
@@ -23,7 +23,6 @@ const NavBar = () => {
       px={4}
       bg={useColorModeValue("#a3b092", "#a3b092")}
       rounded={"25px"}
-      mt={3}
       w={"full"}
     >
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>

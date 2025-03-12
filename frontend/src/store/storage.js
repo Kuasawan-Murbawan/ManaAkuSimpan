@@ -23,7 +23,7 @@ export const useStorageStore = create((set) => ({
     return { success: true, message: "Storage created!" }; // success: responseData.success
   },
   fetchStorage: async (storageId) => {
-    // TODO: implement this
+    // TODO: i dont think we need this
   },
   fetchAllStorages: async () => {
     // default method is GET so no need to specify

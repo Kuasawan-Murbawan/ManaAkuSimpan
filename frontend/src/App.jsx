@@ -13,7 +13,7 @@ import { useColorModeValue } from "@chakra-ui/react";
 
 function App() {
   return (
-    <Box minH={"100vh"} bg={useColorModeValue("#e1e0e0", "gray.900")}>
+    <Box minH={"100vh"} bg={useColorModeValue("#e1e0e0", "gray.900")} pt={5}>
       {/* <NavBar /> */}
       <NavBar />
 
