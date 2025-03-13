@@ -51,7 +51,7 @@ export const createItem = async (req, res) => {
   if (!item.name || !item.storageId) {
     return res
       .status(400)
-      .json({ success: false, message: "Please provide all info" });
+      .json({ success: false, message: "Please provide all info", data: item });
   }
 
   try {

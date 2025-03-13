@@ -8,7 +8,6 @@ import {
   Box,
   Text,
   Input,
-  Toast,
   Button,
   useToast,
 } from "@chakra-ui/react";
@@ -37,7 +36,6 @@ const CreateStorage = () => {
       status: status,
     });
 
-    console.log(`${success} : ${message}`);
     setNewStorage({ name: "", location: "", description: "" });
   };
 

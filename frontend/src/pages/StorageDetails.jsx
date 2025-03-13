@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useItemStore } from "../store/item";
 import { useStorageStore } from "../store/storage";
@@ -14,12 +14,20 @@ import {
   Button,
   Modal,
   useDisclosure,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  Input,
+  useToast,
+  ModalFooter,
 } from "@chakra-ui/react";
 import { IoLocationOutline } from "react-icons/io5";
 
 const StorageDetails = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { fetchItems, items } = useItemStore();
+  const { fetchItems, createItem, items } = useItemStore();
   const { storageId } = useParams();
 
   const { storages } = useStorageStore();
@@ -30,6 +38,31 @@ const StorageDetails = () => {
   useEffect(() => {
     fetchItems(storageId);
   }, [fetchItems]);
+  const toast = useToast();
+
+  const [newItem, setNewItem] = useState({
+    name: "",
+    storageId: storageId,
+    image: "",
+    keywords: "",
+  });
+
+  const handleAddItem = async () => {
+    const { success, message } = await createItem(newItem);
+
+    let title = success ? "Storage Created" : "Error";
+    let status = success ? "success" : "error";
+
+    onClose();
+
+    toast({
+      title: title,
+      description: message,
+      status: status,
+    });
+
+    setNewItem({ name: "", storageId: storageId, image: "", keywords: "" });
+  };
 
   if (!items || !storage) return <p>Items loading..</p>;
 
@@ -88,7 +121,7 @@ const StorageDetails = () => {
 
       <Box h={1} w={"85%"} bg={"blackAlpha.400"} my={3}></Box>
       <HStack w={"75%"} justifyContent={"space-between"}>
-        <Button w={"250px"} bg={"#283715"} color={"white"}>
+        <Button w={"250px"} bg={"#283715"} color={"white"} onClick={onOpen}>
           Add New Item
         </Button>
         <Button w={"350px"}>Search</Button>
@@ -96,6 +129,68 @@ const StorageDetails = () => {
           Clear All Item
         </Button>
       </HStack>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add Item</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack spacing={5} mb={5} alignItems={"start"}>
+              <Box w={"full"}>
+                <Text>Name</Text>
+                <Input
+                  placeholder={"Item Name"}
+                  name="name"
+                  value={newItem.name}
+                  onChange={(e) =>
+                    setNewItem({
+                      ...newItem,
+                      name: e.target.value,
+                    })
+                  }
+                ></Input>
+              </Box>
+              <Box w={"full"}>
+                <Text>Keywords</Text>
+                <Input
+                  placeholder={"keywords, synonyms"}
+                  name="keywords"
+                  value={newItem.keywords}
+                  onChange={(e) =>
+                    setNewItem({
+                      ...newItem,
+                      keywords: e.target.value,
+                    })
+                  }
+                ></Input>
+              </Box>
+              <Box w={"full"}>
+                <Text>Image</Text>
+                <Input
+                  placeholder={"Item Image"}
+                  name="image"
+                  value={newItem.image}
+                  onChange={(e) =>
+                    setNewItem({
+                      ...newItem,
+                      image: e.target.value,
+                    })
+                  }
+                ></Input>
+              </Box>
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={4} onClick={() => handleAddItem()}>
+              Submit
+            </Button>
+            <Button variant={"ghost"} onClick={onClose}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </VStack>
   );
 };
