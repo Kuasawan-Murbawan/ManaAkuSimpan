@@ -12,6 +12,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useStorageStore } from "../store/storage";
+import { useNavigate } from "react-router-dom";
 
 const CreateStorage = () => {
   const [newStorage, setNewStorage] = useState({
@@ -20,7 +21,7 @@ const CreateStorage = () => {
     location: "",
     image: "",
   });
-
+  const navigate = useNavigate();
   const toast = useToast();
   const { createStorage } = useStorageStore();
 
@@ -36,7 +37,10 @@ const CreateStorage = () => {
       status: status,
     });
 
-    setNewStorage({ name: "", location: "", description: "" });
+    if (success) {
+      setNewStorage({ name: "", location: "", description: "" });
+      navigate("/storage");
+    }
   };
 
   return (
@@ -87,6 +91,18 @@ const CreateStorage = () => {
                 value={newStorage.description}
                 onChange={(e) =>
                   setNewStorage({ ...newStorage, description: e.target.value })
+                }
+              ></Input>
+            </Box>
+            <Box h={"full"} w={"full"}>
+              <Text mb="8px">Image: </Text>
+              <Input
+                size="sm"
+                name="description"
+                placeholder=""
+                value={newStorage.image}
+                onChange={(e) =>
+                  setNewStorage({ ...newStorage, image: e.target.value })
                 }
               ></Input>
             </Box>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useItemStore } from "../store/item";
 import { useStorageStore } from "../store/storage";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Text,
   HStack,
@@ -22,15 +22,36 @@ import {
   Input,
   useToast,
   ModalFooter,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
+
 import { IoLocationOutline } from "react-icons/io5";
+import { FaAngleDown } from "react-icons/fa";
 
 const StorageDetails = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { fetchItems, createItem, items } = useItemStore();
-  const { storageId } = useParams();
+  const toast = useToast();
 
-  const { storages } = useStorageStore();
+  // For Add New Item Modal
+  const {
+    isOpen: isAddItemOpen,
+    onOpen: onAddItemOpen,
+    onClose: onAddItemClose,
+  } = useDisclosure();
+
+  // For Edit Storage Modal
+  const {
+    isOpen: isUpdateStorageOpen,
+    onOpen: onUpdateStorageOpen,
+    onClose: onUpdateStorageClose,
+  } = useDisclosure();
+
+  const { fetchItems, createItem, items } = useItemStore();
+  const { storages, deleteStorage, updateStorage } = useStorageStore();
+  const { storageId } = useParams();
+  const navigate = useNavigate();
 
   // get current storage's details
   const storage = storages.find((storage) => storage._id === storageId);
@@ -38,7 +59,6 @@ const StorageDetails = () => {
   useEffect(() => {
     fetchItems(storageId);
   }, [fetchItems]);
-  const toast = useToast();
 
   const [newItem, setNewItem] = useState({
     name: "",
@@ -53,7 +73,7 @@ const StorageDetails = () => {
     let title = success ? "Storage Created" : "Error";
     let status = success ? "success" : "error";
 
-    onClose();
+    onAddItemClose();
 
     toast({
       title: title,
@@ -62,6 +82,41 @@ const StorageDetails = () => {
     });
 
     setNewItem({ name: "", storageId: storageId, image: "", keywords: "" });
+  };
+
+  const handleDeleteStorage = async (sid) => {
+    const { success, message } = await deleteStorage(sid);
+
+    let title = success ? "Storage Deleted" : "Error";
+    let status = success ? "success" : "error";
+
+    toast({
+      title: title,
+      description: message,
+      status: status,
+    });
+
+    if (success) {
+      navigate("/storage");
+    }
+  };
+
+  const [updatedStorage, setUpdatedStorage] = useState(storage); // initial value in edit storage is the current value
+
+  const handleUpdateStorage = async (sid, updatedStorage) => {
+    const { success, message } = await updateStorage(sid, updatedStorage);
+
+    // close modal after update storage
+    onUpdateStorageClose();
+
+    let title = success ? "Storage Updated" : "Error";
+    let status = success ? "success" : "error";
+
+    toast({
+      title: title,
+      description: message,
+      status: status,
+    });
   };
 
   if (!items || !storage) return <p>Items loading..</p>;
@@ -121,16 +176,39 @@ const StorageDetails = () => {
 
       <Box h={1} w={"85%"} bg={"blackAlpha.400"} my={3}></Box>
       <HStack w={"75%"} justifyContent={"space-between"}>
-        <Button w={"250px"} bg={"#283715"} color={"white"} onClick={onOpen}>
+        <Button
+          w={"250px"}
+          bg={"#283715"}
+          color={"white"}
+          onClick={onAddItemOpen}
+        >
           Add New Item
         </Button>
         <Button w={"350px"}>Search</Button>
-        <Button w={"250px"} bg={"#e54e4e"} color={"white"}>
-          Clear All Item
-        </Button>
+        <Menu>
+          <MenuButton
+            as={Button}
+            rightIcon={<FaAngleDown />}
+            w={"250px"}
+            color={"black"}
+          >
+            Settings
+          </MenuButton>
+          <MenuList>
+            <MenuItem onClick={onUpdateStorageOpen}>Edit Storage</MenuItem>
+            <MenuItem>Clear all items</MenuItem>
+            <MenuItem
+              bg={"#e54e4e"}
+              color={"white"}
+              onClick={() => handleDeleteStorage(storage._id)}
+            >
+              Delete Storage
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </HStack>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isAddItemOpen} onClose={onAddItemClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add Item</ModalHeader>
@@ -185,7 +263,75 @@ const StorageDetails = () => {
             <Button colorScheme="blue" mr={4} onClick={() => handleAddItem()}>
               Submit
             </Button>
-            <Button variant={"ghost"} onClick={onClose}>
+            <Button variant={"ghost"} onClick={onAddItemClose}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isUpdateStorageOpen} onClose={onUpdateStorageClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Update Storage</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack spacing={10} m={10}>
+              <Input
+                placeholder="Product Name"
+                name="name"
+                value={updatedStorage.name}
+                onChange={(e) =>
+                  setUpdatedStorage({
+                    ...updatedStorage,
+                    name: e.target.value,
+                  })
+                }
+              />
+              <Input
+                placeholder="Location"
+                name="location"
+                value={updatedStorage.location}
+                onChange={(e) =>
+                  setUpdatedStorage({
+                    ...updatedStorage,
+                    location: e.target.value,
+                  })
+                }
+              />
+              <Input
+                placeholder="Description"
+                name="description"
+                value={updatedStorage.description}
+                onChange={(e) =>
+                  setUpdatedStorage({
+                    ...updatedStorage,
+                    description: e.target.value,
+                  })
+                }
+              />
+              <Input
+                placeholder="Image"
+                name="image"
+                value={updatedStorage.image}
+                onChange={(e) =>
+                  setUpdatedStorage({
+                    ...updatedStorage,
+                    image: e.target.value,
+                  })
+                }
+              />
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={4}
+              onClick={() => handleUpdateStorage(storage._id, updatedStorage)}
+            >
+              Update
+            </Button>
+            <Button variant={"ghost"} onClick={onUpdateStorageClose}>
               Cancel
             </Button>
           </ModalFooter>

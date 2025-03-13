@@ -18,7 +18,7 @@ export const useStorageStore = create((set) => ({
     const responseData = await res.json();
 
     // set the current storages to be the storages in the server
-    set((state) => ({ storages: [...state.storage, responseData.data] }));
+    set((state) => ({ storages: [...state.storages, responseData.data] }));
 
     return { success: true, message: "Storage created!" }; // success: responseData.success
   },
