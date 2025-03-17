@@ -30,6 +30,7 @@ import {
 
 import { IoLocationOutline } from "react-icons/io5";
 import { FaAngleDown } from "react-icons/fa";
+import ItemCard from "../components/ui/ItemCard";
 
 const StorageDetails = () => {
   const toast = useToast();
@@ -49,9 +50,15 @@ const StorageDetails = () => {
   } = useDisclosure();
 
   const { fetchItems, createItem, items } = useItemStore();
-  const { storages, deleteStorage, updateStorage } = useStorageStore();
+  const { storages, deleteStorage, updateStorage, fetchAllStorages } =
+    useStorageStore();
   const { storageId } = useParams();
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchAllStorages();
+  }, [fetchAllStorages]);
 
   // get current storage's details
   const storage = storages.find((storage) => storage._id === storageId);
@@ -146,32 +153,20 @@ const StorageDetails = () => {
           w={"full"}
           spacingY={4}
         >
-          {items.length > 0 ? (
-            items.map((item) => (
-              <Box key={item._id} p={3}>
-                <VStack>
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    h={48}
-                    w={48}
-                    objectFit={"cover"}
-                    borderRadius={"md"}
-                  />
-                  <Text>{item.name}</Text>
-                </VStack>
-              </Box>
-            ))
-          ) : (
-            <GridItem
-              colSpan={{ base: 1, sm: 2, md: 3 }}
-              w={"full"}
-              alignItems={"center"}
-            >
-              <Text>No items found.</Text>
-            </GridItem>
-          )}
+          {items.map((item) => (
+            <ItemCard key={item._id} item={item} storageName={storage.name} />
+          ))}
         </SimpleGrid>
+
+        {items.length === 0 && (
+          <GridItem
+            colSpan={{ base: 1, sm: 2, md: 3 }}
+            w={"full"}
+            alignItems={"center"}
+          >
+            <Text>No items found.</Text>
+          </GridItem>
+        )}
       </Box>
 
       <Box h={1} w={"85%"} bg={"blackAlpha.400"} my={3}></Box>

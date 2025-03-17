@@ -23,7 +23,12 @@ export const useStorageStore = create((set) => ({
     return { success: true, message: "Storage created!" }; // success: responseData.success
   },
   fetchStorage: async (storageId) => {
-    // TODO: i dont think we need this
+    const responseData = await fetch(`/api/storage/${storageId}`, {
+      method: "GET",
+    });
+    console.log("res: ", responseData.data);
+    // TODO: data is undefined, postman okay, find out why
+    set({ storages: responseData.data || [] });
   },
   fetchAllStorages: async () => {
     // default method is GET so no need to specify

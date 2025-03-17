@@ -11,8 +11,6 @@ const Storage = () => {
     fetchAllStorages();
   }, [fetchAllStorages]);
 
-  // console.log(storages);
-
   if (!storages) return <p>Loading...</p>;
 
   return (

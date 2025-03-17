@@ -59,7 +59,6 @@ export const createItem = async (req, res) => {
     const storageExist = await Storage.findById(item.storageId);
 
     if (!storageExist || !mongoose.Types.ObjectId.isValid(item.storageId)) {
-      console.log("Id tidak exist");
       return res
         .status(404)
         .json({ success: false, message: "Storage ID not found" });
