@@ -16,7 +16,7 @@
 - [x] create, edit, delete item
 - [x] assign name, keywords (BM/BI)
 - [ ] assign image to the item
-- [ ] user can move item from one storage to another
+- [x] user can move item from one storage to another
 - [ ] user can clear all item from a storage
 
 # Search
@@ -29,3 +29,9 @@
 - [ ] can import data from CSV/JSON
 - [ ] can export data to CSV/JSON
 - [ ] can share storage with other users
+- [ ] implement light/dark mode
+
+# 23 Mar 25
+
+- [x] confirm before delete
+- [ ] clear all items

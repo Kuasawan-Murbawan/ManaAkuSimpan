@@ -31,6 +31,7 @@ import {
 import { IoLocationOutline } from "react-icons/io5";
 import { FaAngleDown } from "react-icons/fa";
 import ItemCard from "../components/ui/ItemCard";
+import ConfirmDeleteAlertDialog from "../components/ui/ConfirmDeleteAlertDialog";
 
 const StorageDetails = () => {
   const toast = useToast();
@@ -74,6 +75,7 @@ const StorageDetails = () => {
     keywords: "",
   });
 
+  // Add Item
   const handleAddItem = async () => {
     const { success, message } = await createItem(newItem);
 
@@ -90,6 +92,14 @@ const StorageDetails = () => {
 
     setNewItem({ name: "", storageId: storageId, image: "", keywords: "" });
   };
+
+  // Delete Storage
+  const {
+    isOpen: confirmDeleteisOpen,
+    onOpen: confirmDeleteOnOpen,
+    onClose: confirmDeleteOnClose,
+  } = useDisclosure();
+  const cancelRef = React.useRef();
 
   const handleDeleteStorage = async (sid) => {
     const { success, message } = await deleteStorage(sid);
@@ -108,6 +118,7 @@ const StorageDetails = () => {
     }
   };
 
+  // Update Storage
   const [updatedStorage, setUpdatedStorage] = useState(currentStorage); // initial value in edit storage is the current value
 
   const handleUpdateStorage = async (sid, updatedStorage) => {
@@ -199,7 +210,7 @@ const StorageDetails = () => {
             <MenuItem
               bg={"#e54e4e"}
               color={"white"}
-              onClick={() => handleDeleteStorage(currentStorage._id)}
+              onClick={confirmDeleteOnOpen}
             >
               Delete Storage
             </MenuItem>
@@ -341,6 +352,15 @@ const StorageDetails = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <ConfirmDeleteAlertDialog
+        isOpen={confirmDeleteisOpen}
+        onClose={confirmDeleteOnClose}
+        onConfirm={() => handleDeleteStorage(currentStorage._id)}
+        cancelRef={cancelRef}
+        title={"Confirm Delete"}
+        subject={"Storage"}
+      />
     </VStack>
   );
 };

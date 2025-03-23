@@ -22,6 +22,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useItemStore } from "../../store/item";
 import { useNavigate } from "react-router-dom";
 import { useStorageStore } from "../../store/storage";
+import ConfirmDeleteAlertDialog from "./ConfirmDeleteAlertDialog";
 
 const ItemCard = ({ item, Currentstorage }) => {
   const navigate = useNavigate();
@@ -62,6 +63,13 @@ const ItemCard = ({ item, Currentstorage }) => {
   };
 
   // Delete Item
+  // Alert Dialog properties
+  const {
+    isOpen: confirmDeleteisOpen,
+    onOpen: confirmDeleteOnOpen,
+    onClose: confirmDeleteOnClose,
+  } = useDisclosure();
+
   const handleDeleteItem = async (itemId) => {
     const { success, message } = await deleteItem(itemId);
     let title = success ? "Item Deleted" : "Error";
@@ -117,7 +125,7 @@ const ItemCard = ({ item, Currentstorage }) => {
                 <Button
                   bg={"Red"}
                   color={"white"}
-                  onClick={() => handleDeleteItem(item._id)}
+                  onClick={confirmDeleteOnOpen}
                 >
                   Delete
                 </Button>
@@ -219,6 +227,15 @@ const ItemCard = ({ item, Currentstorage }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <ConfirmDeleteAlertDialog
+        isOpen={confirmDeleteisOpen}
+        onClose={confirmDeleteOnClose}
+        onConfirm={() => handleDeleteItem(item._id)}
+        cancelRef={React.useRef()}
+        title={"Confirm Delete"}
+        subject={"Item"}
+      />
     </Box>
   );
 };
