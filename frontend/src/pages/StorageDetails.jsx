@@ -61,7 +61,7 @@ const StorageDetails = () => {
   }, [fetchAllStorages]);
 
   // get current storage's details
-  const storage = storages.find((storage) => storage._id === storageId);
+  const currentStorage = storages.find((storage) => storage._id === storageId);
 
   useEffect(() => {
     fetchItems(storageId);
@@ -108,7 +108,7 @@ const StorageDetails = () => {
     }
   };
 
-  const [updatedStorage, setUpdatedStorage] = useState(storage); // initial value in edit storage is the current value
+  const [updatedStorage, setUpdatedStorage] = useState(currentStorage); // initial value in edit storage is the current value
 
   const handleUpdateStorage = async (sid, updatedStorage) => {
     const { success, message } = await updateStorage(sid, updatedStorage);
@@ -126,21 +126,21 @@ const StorageDetails = () => {
     });
   };
 
-  if (!items || !storage) return <p>Items loading..</p>;
+  if (!items || !currentStorage) return <p>Items loading..</p>;
 
   return (
     <VStack maxH={"100vh"} overflow={"hidden"}>
       <HStack w={"full"} justifyContent="space-between">
         <Text fontSize={50} fontWeight="bold" ml={20}>
-          {storage.name}
+          {currentStorage.name}
         </Text>
         <HStack mr={20}>
           <IoLocationOutline fontSize={45} />
-          <Text fontSize={45}>{storage.location}</Text>
+          <Text fontSize={45}>{currentStorage.location}</Text>
         </HStack>
       </HStack>
       <Text fontSize={30} w={"full"} alignItems={"Start"} ml={40}>
-        {storage.description}
+        {currentStorage.description}
       </Text>
 
       <Box overflowY={"auto"} w={"90%"} h={"400px"} mt={5}>
@@ -154,7 +154,11 @@ const StorageDetails = () => {
           spacingY={4}
         >
           {items.map((item) => (
-            <ItemCard key={item._id} item={item} storageName={storage.name} />
+            <ItemCard
+              key={item._id}
+              item={item}
+              storageName={currentStorage.name}
+            />
           ))}
         </SimpleGrid>
 
@@ -195,7 +199,7 @@ const StorageDetails = () => {
             <MenuItem
               bg={"#e54e4e"}
               color={"white"}
-              onClick={() => handleDeleteStorage(storage._id)}
+              onClick={() => handleDeleteStorage(currentStorage._id)}
             >
               Delete Storage
             </MenuItem>
@@ -270,59 +274,64 @@ const StorageDetails = () => {
         <ModalContent>
           <ModalHeader>Update Storage</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-            <VStack spacing={10} m={10}>
-              <Input
-                placeholder="Product Name"
-                name="name"
-                value={updatedStorage.name}
-                onChange={(e) =>
-                  setUpdatedStorage({
-                    ...updatedStorage,
-                    name: e.target.value,
-                  })
-                }
-              />
-              <Input
-                placeholder="Location"
-                name="location"
-                value={updatedStorage.location}
-                onChange={(e) =>
-                  setUpdatedStorage({
-                    ...updatedStorage,
-                    location: e.target.value,
-                  })
-                }
-              />
-              <Input
-                placeholder="Description"
-                name="description"
-                value={updatedStorage.description}
-                onChange={(e) =>
-                  setUpdatedStorage({
-                    ...updatedStorage,
-                    description: e.target.value,
-                  })
-                }
-              />
-              <Input
-                placeholder="Image"
-                name="image"
-                value={updatedStorage.image}
-                onChange={(e) =>
-                  setUpdatedStorage({
-                    ...updatedStorage,
-                    image: e.target.value,
-                  })
-                }
-              />
-            </VStack>
-          </ModalBody>
+          {updatedStorage && (
+            <ModalBody>
+              <VStack spacing={10} m={10}>
+                <Input
+                  placeholder="Product Name"
+                  name="name"
+                  value={updatedStorage.name}
+                  onChange={(e) =>
+                    setUpdatedStorage({
+                      ...updatedStorage,
+                      name: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  placeholder="Location"
+                  name="location"
+                  value={updatedStorage.location}
+                  onChange={(e) =>
+                    setUpdatedStorage({
+                      ...updatedStorage,
+                      location: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  placeholder="Description"
+                  name="description"
+                  value={updatedStorage.description}
+                  onChange={(e) =>
+                    setUpdatedStorage({
+                      ...updatedStorage,
+                      description: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  placeholder="Image"
+                  name="image"
+                  value={updatedStorage.image}
+                  onChange={(e) =>
+                    setUpdatedStorage({
+                      ...updatedStorage,
+                      image: e.target.value,
+                    })
+                  }
+                />
+              </VStack>
+            </ModalBody>
+          )}
+
           <ModalFooter>
             <Button
               colorScheme="blue"
               mr={4}
-              onClick={() => handleUpdateStorage(storage._id, updatedStorage)}
+              onClick={() =>
+                handleUpdateStorage(currentStorage._id, updatedStorage)
+              }
             >
               Update
             </Button>

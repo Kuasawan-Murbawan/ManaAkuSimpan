@@ -144,7 +144,7 @@ const ItemCard = ({ item, storageName }) => {
           <ModalHeader>Update Item</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <VStack spacing={10} m={10}>
+            <VStack spacing={10} m={2}>
               <Input
                 placeholder="Item Name"
                 name="name"
