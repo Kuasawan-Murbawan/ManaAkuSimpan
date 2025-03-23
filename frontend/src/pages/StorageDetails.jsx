@@ -157,7 +157,7 @@ const StorageDetails = () => {
             <ItemCard
               key={item._id}
               item={item}
-              storageName={currentStorage.name}
+              Currentstorage={currentStorage}
             />
           ))}
         </SimpleGrid>

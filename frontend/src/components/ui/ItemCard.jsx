@@ -16,12 +16,14 @@ import {
   Button,
   Input,
   useToast,
+  Select,
 } from "@chakra-ui/react";
 import { FaArrowLeft } from "react-icons/fa";
 import { useItemStore } from "../../store/item";
 import { useNavigate } from "react-router-dom";
+import { useStorageStore } from "../../store/storage";
 
-const ItemCard = ({ item, storageName }) => {
+const ItemCard = ({ item, Currentstorage }) => {
   const navigate = useNavigate();
   const toast = useToast();
   // Display Item Details
@@ -41,7 +43,11 @@ const ItemCard = ({ item, storageName }) => {
   } = useDisclosure();
 
   const handleUpdateItem = async (itemId, updatedItem) => {
-    const { success, message } = await updateItem(itemId, updatedItem);
+    const { success, message } = await updateItem(
+      itemId,
+      updatedItem,
+      Currentstorage._id
+    );
 
     onUpdateItemClose();
 
@@ -72,6 +78,9 @@ const ItemCard = ({ item, storageName }) => {
     }
   };
 
+  // Fetch all Storage
+  const { storages } = useStorageStore();
+
   return (
     <Box key={item._id} p={3}>
       <VStack onClick={onItemDetailOpen} cursor={"pointer"}>
@@ -101,7 +110,7 @@ const ItemCard = ({ item, storageName }) => {
                 cursor={"pointer"}
               >
                 <FaArrowLeft fontSize={40} />
-                <Text fontSize={40}>{storageName}</Text>
+                <Text fontSize={40}>{Currentstorage.name}</Text>
               </HStack>
               <HStack spacing={5}>
                 <Button onClick={onUpdateItemOpen}>Update</Button>
@@ -178,6 +187,22 @@ const ItemCard = ({ item, storageName }) => {
                   })
                 }
               />
+              <Select
+                name="location"
+                value={updatedItem.storageId}
+                onChange={(e) => {
+                  setUpdatedItem({
+                    ...updatedItem,
+                    storageId: e.target.value,
+                  });
+                }}
+              >
+                {storages.map((storage) => (
+                  <option key={storage._id} value={storage._id}>
+                    {storage.name}
+                  </option>
+                ))}
+              </Select>
             </VStack>
           </ModalBody>
           <ModalFooter>

@@ -34,7 +34,7 @@ export const useItemStore = create((set) => ({
 
     return { success: true, message: "Item created" };
   },
-  updateItem: async (iid, updatedItem) => {
+  updateItem: async (iid, updatedItem, currentStorageId) => {
     if (!updatedItem.name || !updatedItem._id) {
       return { success: false, message: "please include name" };
     }
@@ -53,9 +53,11 @@ export const useItemStore = create((set) => ({
       return { success: false, message: responseData.message };
 
     set((state) => ({
-      items: state.items.map((item) =>
-        item._id === iid ? responseData.data : item
-      ),
+      items: state.items
+        // update the item in the list
+        .map((item) => (item._id === iid ? responseData.data : item))
+        // filter out the item from the list (for moving item use case)
+        .filter((item) => item.storageId === currentStorageId),
     }));
 
     return { success: true, message: responseData.message };
