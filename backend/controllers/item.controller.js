@@ -126,3 +126,22 @@ export const deleteItem = async (req, res) => {
 };
 
 // TODO: 6. Clear All Item in a storage
+
+// 7. Search Item
+export const searchItem = async (req, res) => {
+  const { query } = req.params;
+
+  try {
+    // Do find operation backend
+    const items = await Item.find({
+      $or: [
+        // i is for case insensitive
+        { name: { $regex: query, $options: "i" } },
+        { keywords: { $regex: query, $options: "i" } },
+      ],
+    });
+    res.status(200).json({ success: true, message: "Item found", data: items });
+  } catch (error) {
+    catchingErrors("Searching Item", res, error);
+  }
+};

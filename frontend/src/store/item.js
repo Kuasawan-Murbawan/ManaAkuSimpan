@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export const useItemStore = create((set) => ({
+export const useItemStore = create((set, get) => ({
   items: [],
   setItem: (item) => set({ item }),
   fetchAllItems: async () => {
@@ -76,5 +76,14 @@ export const useItemStore = create((set) => ({
       items: state.items.filter((item) => item._id !== iid),
     }));
     return { success: true, message: responseData.message };
+  },
+  searchItem: async (keyword) => {
+    const res = await fetch(`/api/item/search/${keyword}`);
+    const responseData = await res.json();
+
+    if (!responseData.success) return { success: false, message: responseData };
+
+    set({ items: responseData.data || [] });
+    return { success: true, message: "Item found" };
   },
 }));
