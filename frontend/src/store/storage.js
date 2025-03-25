@@ -23,11 +23,11 @@ export const useStorageStore = create((set) => ({
     return { success: true, message: "Storage created!" }; // success: responseData.success
   },
   fetchStorage: async (storageId) => {
-    const responseData = await fetch(`/api/storage/${storageId}`, {
+    const res = await fetch(`/api/storage/${storageId}`, {
       method: "GET",
     });
-    console.log("res: ", responseData.data);
-    // TODO: data is undefined, postman okay, find out why
+    const responseData = await res.json();
+
     set({ storages: responseData.data || [] });
   },
   fetchAllStorages: async () => {

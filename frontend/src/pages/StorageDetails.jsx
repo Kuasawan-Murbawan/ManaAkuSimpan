@@ -55,14 +55,24 @@ const StorageDetails = () => {
     useStorageStore();
   const { storageId } = useParams();
 
+  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
 
+  // we do need every storage because updating item need to have all storage's name
   useEffect(() => {
-    fetchAllStorages();
+    const fetchData = async () => {
+      await fetchAllStorages();
+      setLoading(false);
+    };
+    fetchData();
   }, [fetchAllStorages]);
 
   // get current storage's details
-  const currentStorage = storages.find((storage) => storage._id === storageId);
+  // do checking because this will produce error if fetchAllStorage hasnt done retrieving
+  const currentStorage = !loading
+    ? storages.find((storage) => storage._id === storageId)
+    : null;
 
   useEffect(() => {
     fetchItems(storageId);
@@ -137,7 +147,7 @@ const StorageDetails = () => {
     });
   };
 
-  if (!items || !currentStorage) return <p>Items loading..</p>;
+  if (loading || !items || !currentStorage) return <p>Items loading..</p>;
 
   return (
     <VStack maxH={"100vh"} overflow={"hidden"}>
@@ -194,7 +204,14 @@ const StorageDetails = () => {
         >
           Add New Item
         </Button>
-        <Button w={"350px"}>Search</Button>
+        <Button
+          w={"350px"}
+          onClick={() => {
+            navigate("/search");
+          }}
+        >
+          Search
+        </Button>
         <Menu>
           <MenuButton
             as={Button}

@@ -21,8 +21,7 @@
 
 # Search
 
-- [ ] search for items by keyword
-- [ ] search for items by description
+- [x] search for items by keyword
 
 # Misc
 
@@ -35,3 +34,10 @@
 
 - [x] confirm before delete
 - [ ] clear all items
+- [x] implement backend and api - search for item
+- [x] build interface for search results
+
+# 26 Mar 25
+
+- [x] create modal for search results
+- [x] redirect to storage page when clicked
